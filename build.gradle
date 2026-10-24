@@ -40,6 +40,18 @@ neoForge {
             systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
         }
 
+        playerOne {
+            client()
+            gameDirectory = project.file('runs/neo')
+            programArguments.addAll '--username', 'neo', '--uuid', '00000000-0000-0000-0000-000000000001'
+        }
+
+        playerTwo {
+            client()
+            gameDirectory = project.file('runs/evil_neo')
+            programArguments.addAll '--username', 'evil_neo', '--uuid', '00000000-0000-0000-0000-000000000002'
+        }
+
         server {
             server()
             programArgument '--nogui'

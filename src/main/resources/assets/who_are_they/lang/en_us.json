@@ -1,5 +1,9 @@
 {
   "who_are_they.configuration.identity_concealers": "Identity Concealers",
   "who_are_they.configuration.conceal_chat_messages": "Conceal Chat Messages",
-  "who_are_they.concealed_name": "???"
+  "who_are_they.configuration.hide_conceal_notification": "Hide Concealment Notification",
+
+  "who_are_they.concealed_name": "???",
+  "who_are_they.concealment_notifier": "(*Concealed)",
+  "who_are_they.concealment_notifier.tooltip": "This message is conealed to people with %s enabled."
 }
