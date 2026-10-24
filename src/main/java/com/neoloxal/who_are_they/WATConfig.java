@@ -16,8 +16,6 @@ public class WATConfig {
     public static Set<String> registeredItems;
 
     public final ModConfigSpec.ConfigValue<List<? extends String>> identity_concealers;
-    public final ModConfigSpec.BooleanValue conceal_chat_messages;
-    public final ModConfigSpec.BooleanValue hide_conceal_notification;
 
     public WATConfig(ModConfigSpec.Builder builder) {
         identity_concealers = builder.defineList(
@@ -30,9 +28,6 @@ public class WATConfig {
                 () -> "",
                 object -> object instanceof String string && (registeredItems == null || registeredItems.contains(string))
         );
-
-        conceal_chat_messages = builder.define("conceal_chat_messages", false);
-        hide_conceal_notification = builder.define("hide_conceal_notification", false);
     }
 
     static {
