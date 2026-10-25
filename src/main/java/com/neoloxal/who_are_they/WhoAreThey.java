@@ -1,6 +1,7 @@
 package com.neoloxal.who_are_they;
 
 import com.mojang.logging.LogUtils;
+import com.neoloxal.concealment_api.ConcealmentAPI;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -13,6 +14,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
@@ -32,11 +34,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Mod(value = WhoAreThey.MODID, dist = Dist.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class WhoAreThey {
     public static final String MODID = "who_are_they";
     private static final Logger LOGGER = LogUtils.getLogger();
-
-    private Set<Item> identityConcealers;
 
     public WhoAreThey(IEventBus modEventBus, ModContainer modContainer) {
         modContainer.registerConfig(ModConfig.Type.CLIENT, WATConfig.CONFIG_SPEC);
@@ -54,19 +55,18 @@ public class WhoAreThey {
 
     public void configLoaded(ModConfigEvent event) {
         if (event.getConfig().getSpec() == WATConfig.CONFIG_SPEC) {
-            this.identityConcealers = WATConfig.CONFIG.identity_concealers.get().stream()
+            Set<Item> identityConcealers = WATConfig.CONFIG.identity_concealers.get().stream()
                     .map(ResourceLocation::tryParse)
                     .filter(Objects::nonNull)
                     .map(BuiltInRegistries.ITEM::get)
                     .collect(Collectors.toSet());
+            ConcealmentAPI.setClientIdentityConcealers(identityConcealers);
         }
     }
 
     public void renderNameTag(RenderNameTagEvent event) {
         if (event.getEntity() instanceof Player player) {
-            ItemStack headItem = player.getItemBySlot(EquipmentSlot.HEAD);
-
-            if (!headItem.isEmpty() && identityConcealers.contains(headItem.getItem())) {
+            if (ConcealmentAPI.isPlayerConcealed(player)) {
                 event.setCanRender(TriState.FALSE);
             }
         }
